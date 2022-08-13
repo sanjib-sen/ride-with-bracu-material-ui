@@ -7,11 +7,20 @@ import { Props } from "../types/PageProps";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import Stack from "@mui/material/Stack";
-const profile: NextPage<Props> = () => {
+import { useFirebaseAuth } from "../firebase/context";
+
+/**
+ * TODO: Redirect to Login if not logged in
+ * TODO: implement handleEdit (Profile Edit)
+ */
+const Profile: NextPage<Props> = () => {
+  const user = useFirebaseAuth();
   return (
     <Layout>
       <Grid2 xs={12} sm={12} md={6} lg={6} xl={6} padding={2}>
-        <Typography variant="h3">Sanjib Kumar Sen</Typography>
+        <Typography variant="h3">
+          {user ? user.displayName : "Not Logged In"}
+        </Typography>
       </Grid2>
       <Grid2 xs={9} sm={9} md={6} lg={6} xl={6} padding={2}>
         <Stack spacing={1}>
@@ -54,4 +63,4 @@ const profile: NextPage<Props> = () => {
   );
 };
 
-export default profile;
+export default Profile;

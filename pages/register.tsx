@@ -9,10 +9,12 @@ import { useState, FormEvent } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Select from "react-select";
+import { SelectProps } from "../types/SelectProps";
 
 const RegisterPage: NextPage<any> = ({ items }) => {
-  const [selectedArea, setSelectedArea] = useState(null);
-  const [selectedGender, setSelectedGender] = useState(null);
+  const [area, setArea] = useState<any>();
+  const [gender, setGender] = useState<any>();
+
   const genders = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
@@ -20,9 +22,10 @@ const RegisterPage: NextPage<any> = ({ items }) => {
   ];
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log({
-      gender: selectedGender,
-    });
+    /**
+     *  TODO: Handle Submit
+     *
+     */
   };
 
   return (
@@ -49,8 +52,12 @@ const RegisterPage: NextPage<any> = ({ items }) => {
               value="sksenonline@gmail.com"
               disabled
             />
-            <Select  options={genders} onChange={setSelectedGender} />
-            <Select onChange={setSelectedArea} options={items} />
+            <Select
+              defaultValue={gender}
+              options={genders}
+              onChange={setGender}
+            />
+            <Select defaultValue={area} onChange={setArea} options={items} />
             <Button type="submit" variant="contained">
               Set Up
             </Button>
@@ -63,7 +70,7 @@ const RegisterPage: NextPage<any> = ({ items }) => {
 
 export function getStaticProps() {
   var data = require("../data/dhaka.json");
-  var items: any = [];
+  var items: SelectProps[] = [];
   data.map((area: Area) => {
     if (area.area_name.en) {
       items.push({ label: area.area_name.en, value: area.id });

@@ -4,11 +4,10 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import { NextPage } from "next/types";
 import { useState } from "react";
 import Layout from "../components/layout";
 
-const Contact: NextPage = () => {
+function Contact() {
   const [fb, setFb] = useState(false);
   const [phone, setPhone] = useState(false);
 
@@ -20,9 +19,9 @@ const Contact: NextPage = () => {
             Select your Contact Medium
           </Typography>
           <Typography paragraph variant="h5">
-            Choose the medium that you wanted to be contacted with. Your email
-            will be shared by default. Apart from that, You can add Facebook or
-            even your Phone Number.
+            Choose the medium that you wanted to be contacted with. Your G-Suite
+            email address will be shared by default. Apart from that, You can
+            add Facebook or even your Phone Number.
           </Typography>
           <Alert severity="warning">
             Please note that, if you add your Phone Number, everybody will be
@@ -101,6 +100,6 @@ const Contact: NextPage = () => {
       </Grid2>
     </Layout>
   );
-};
+}
 
 export default Contact;
