@@ -1,7 +1,3 @@
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -12,23 +8,21 @@ import { Area } from "../types/Area";
 import { useState, FormEvent } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Select from "react-select";
 
-const RegisterPage: NextPage = () => {
-  var data = require("../data/dhaka.json");
-  const [gender, setGender] = useState("");
-  const [area, setArea] = useState("");
+const RegisterPage: NextPage<any> = ({ items }) => {
+  const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedGender, setSelectedGender] = useState(null);
+  const genders = [
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+    { value: "transgender", label: "Transgender" },
+  ];
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log({
-      gender: gender,
+      gender: selectedGender,
     });
-  };
-  const handleGenderSelection = (event: SelectChangeEvent) => {
-    setGender(event.target.value);
-  };
-
-  const handleAreaSelection = (event: SelectChangeEvent) => {
-    setArea(event.target.value);
   };
 
   return (
@@ -55,39 +49,8 @@ const RegisterPage: NextPage = () => {
               value="sksenonline@gmail.com"
               disabled
             />
-            <FormControl>
-              <InputLabel>Gender</InputLabel>
-              <Select
-                id="gender"
-                value={gender}
-                label="Gender"
-                variant="outlined"
-                onChange={handleGenderSelection}
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-                <MenuItem value="Transgender">Transgender</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <InputLabel>Area</InputLabel>
-              <Select
-                id="area"
-                value={area}
-                label="Area"
-                onChange={handleAreaSelection}
-              >
-                {data.map((area: Area) => {
-                  if (area.area_name.en) {
-                    return (
-                      <MenuItem key={area.id} value={area.area_name.en}>
-                        {area.area_name.en}
-                      </MenuItem>
-                    );
-                  }
-                })}
-              </Select>
-            </FormControl>
+            <Select  options={genders} onChange={setSelectedGender} />
+            <Select onChange={setSelectedArea} options={items} />
             <Button type="submit" variant="contained">
               Set Up
             </Button>
@@ -97,5 +60,21 @@ const RegisterPage: NextPage = () => {
     </Layout>
   );
 };
+
+export function getStaticProps() {
+  var data = require("../data/dhaka.json");
+  var items: any = [];
+  data.map((area: Area) => {
+    if (area.area_name.en) {
+      items.push({ label: area.area_name.en, value: area.id });
+    }
+  });
+
+  return {
+    props: {
+      items,
+    },
+  };
+}
 
 export default RegisterPage;
