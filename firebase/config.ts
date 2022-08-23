@@ -3,8 +3,8 @@ import "firebase/compat/auth";
 import { getAuth } from "firebase/auth";
 
 export const config = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
 };
 
 
@@ -15,10 +15,6 @@ export const uiConfig = {
         signInSuccessWithAuthResult: () => false,
     },
 };
-
-/**
- * TODO: Fix .env does not match with actual value
- */
 
 firebase.initializeApp(config)
 export const auth = getAuth();

@@ -1,4 +1,3 @@
 import firebase from "firebase/compat/app";
 
-
-export type User = firebase.User | null;
+export type User = firebase.User
