@@ -2,31 +2,47 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import { NextPage } from "next/types";
 import Layout from "../components/layout";
 import { Area } from "../types/Area";
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import Select from "react-select";
 import { SelectProps } from "../types/SelectProps";
+import { useFirebaseAuth } from "../firebase/context";
+import { WriteUserData } from "../firebase/setProfile";
+import { convertEmail } from "../utils/emailToUsername";
+import { Profile } from "../types/Profile";
 
-const RegisterPage: NextPage<any> = ({ items }) => {
+function RegisterPage({ items }: any) {
   const [area, setArea] = useState<any>();
   const [gender, setGender] = useState<any>();
-
+  const user = useFirebaseAuth();
   const genders = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
     { value: "transgender", label: "Transgender" },
   ];
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    /**
-     *  TODO: Handle Submit
-     *
-     */
+
+  const handleSubmit = () => {
+    if (gender && area && user.email && user.displayName && user.uid) {
+      console.log(user);
+      const profile: Profile = {
+        uid:user.uid,
+        username: convertEmail(user.email),
+        email: user.email,
+        name: user.displayName,
+        image: user.photoURL,
+        gender: gender,
+        area: area,
+      };
+      console.log(profile);
+      WriteUserData(profile);
+    }
   };
+  /**
+   *  TODO: Handle Submit
+   *
+   */
 
   return (
     <Layout>
@@ -34,39 +50,36 @@ const RegisterPage: NextPage<any> = ({ items }) => {
         <Typography variant="h3">Set up your Profile</Typography>
       </Grid2>
       <Grid2 padding={2}>
-        <Box component="form" noValidate onSubmit={handleSubmit}>
           <Stack spacing={3}>
             <TextField
               size="small"
               variant="standard"
               fullWidth
-              label="Name"
-              value="Sanjib Kumar Sen"
+              value={user?user.displayName:""}
               disabled
             />
             <TextField
               size="small"
               variant="standard"
               fullWidth
-              label="Email Address"
-              value="sksenonline@gmail.com"
+              value={user?user.email:""}
               disabled
             />
             <Select
               defaultValue={gender}
               options={genders}
-              onChange={setGender}
+              onChange={(e)=>{setGender(e.label)}}
+              instanceId="long-value-select"
             />
-            <Select defaultValue={area} onChange={setArea} options={items} />
-            <Button type="submit" variant="contained">
+            <Select defaultValue={area} instanceId="long-value-select" onChange={(e)=>{setArea(e.label)}} options={items} />
+            <Button variant="contained" onClick={handleSubmit}>
               Set Up
             </Button>
           </Stack>
-        </Box>
       </Grid2>
     </Layout>
   );
-};
+}
 
 export function getStaticProps() {
   var data = require("../data/dhaka.json");
